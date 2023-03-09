@@ -23,19 +23,28 @@ public class SMTPConnection {
     /* Create an SMTPConnection object. Create the socket and the 
        associated streams. Initialize SMTP connection. */
     public SMTPConnection(Envelope envelope) throws IOException {
-        // connection = /* Fill in */;
-        fromServer = /* Fill in */;
-        toServer =   /* Fill in */;
+        connection = new Socket("datacomm.bhsi.xyz", 2526);
+        fromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));;
+        toServer = new DataOutputStream(connection.getOutputStream());
 
         /* Fill in */
 	/* Read a line from server and check that the reply code is 220.
 	   If not, throw an IOException. */
+        String ServerMsg = fromServer.readLine();
+
+        int rc = Integer.parseInt(ServerMsg.split(" ")[0]);
+
+        if (rc != 220) {
+            throw (IOException) null;
+        }
+
+        String code = "HELO";
         /* Fill in */
 
 	/* SMTP handshake. We need the name of the local machine.
 	   Send the appropriate SMTP handshake command. */
-        String localhost = /* Fill in */;
-        sendCommand( /* Fill in */ );
+        String localhost = envelope.DestHost;
+        sendCommand(code, 250);
 
         isConnected = true;
     }
@@ -49,6 +58,12 @@ public class SMTPConnection {
 	   sendCommand() to do the dirty work. Do _not_ catch the
 	   exception thrown from sendCommand(). */
         /* Fill in */
+
+        sendCommand("MAIL FROM " + envelope.Sender, 250);
+
+        sendCommand("RCPT TO: <" + envelope.Recipient + ">", 250);
+
+        sendCommand("DATA\r\n" + envelope.Message + "\r\n.\r\n.", 354);
     }
 
     /* Close the connection. First, terminate on SMTP level, then
@@ -56,8 +71,8 @@ public class SMTPConnection {
     public void close() {
         isConnected = false;
         try {
-            sendCommand( /* Fill in */ );
-            // connection.close();
+            sendCommand("QUIT", 250);
+            connection.close();
         } catch (IOException e) {
             System.out.println("Unable to close connection: " + e);
             isConnected = true;
@@ -71,15 +86,25 @@ public class SMTPConnection {
         /* Write command to server and read reply from server. */
         /* Fill in */
 
+        toServer.writeBytes(command+"\r\n");
+
+        String reply = fromServer.readLine();
+        int replyCode = Integer.parseInt(reply.split(" ")[0]);
+
         /* Fill in */
 	/* Check that the server's reply code is the same as the parameter
 	   rc. If not, throw an IOException. */
         /* Fill in */
+        System.out.println(command + " - " + replyCode);
+        if (replyCode != rc) {
+            throw (IOException) null;
+        }
     }
 
     /* Parse the reply line from the server. Returns the reply code. */
     private int parseReply(String reply) {
         /* Fill in */
+        return 0;
     }
 
     /* Destructor. Closes the connection if something bad happens. */
