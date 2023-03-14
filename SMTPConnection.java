@@ -35,7 +35,7 @@ public class SMTPConnection {
         int rc = Integer.parseInt(ServerMsg.split(" ")[0]);
 
         if (rc != 220) {
-            throw (IOException) null;
+            throw new IOException("RC codes don't match");
         }
 
         String code = "HELO";
@@ -97,7 +97,7 @@ public class SMTPConnection {
         /* Fill in */
         System.out.println(command + " - " + replyCode);
         if (replyCode != rc) {
-            throw (IOException) null;
+            throw new IOException("RC codes don't match");
         }
     }
 
