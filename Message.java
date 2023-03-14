@@ -15,8 +15,8 @@ public class Message {
 
     /* Sender and recipient. With these, we don't need to extract them
        from the headers. */
-    private String From;
-    private String To;
+    private final String From;
+    private final String To;
 
     /* To make it look nicer */
     private static final String CRLF = "\r\n";

@@ -122,7 +122,7 @@ public class MailClient extends Frame {
                 return;
             }
             try {
-                SMTPConnection connection = new SMTPConnection(envelope);
+                SMTPConnection connection = new SMTPConnection();
                 connection.send(envelope);
                 connection.close();
             } catch (IOException error) {

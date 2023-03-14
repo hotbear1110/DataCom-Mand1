@@ -50,7 +50,7 @@ public class Envelope {
     /* Escape the message by doubling all periods at the beginning of
        a line. */
     private Message escapeMessage(Message message) {
-        String escapedBody = "";
+        StringBuilder escapedBody = new StringBuilder();
         String token;
         StringTokenizer parser = new StringTokenizer(message.Body, "\n", true);
 
@@ -59,9 +59,9 @@ public class Envelope {
             if(token.startsWith(".")) {
                 token = "." + token;
             }
-            escapedBody += token;
+            escapedBody.append(token);
         }
-        message.Body = escapedBody;
+        message.Body = escapedBody.toString();
         return message;
     }
 
